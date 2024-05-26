@@ -86,7 +86,6 @@ public class Main {
         return gameProgress;
     }
 
-
     public static void main(String[] args) throws ClassNotFoundException {
         StringBuilder sb = new StringBuilder();
 

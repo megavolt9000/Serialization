@@ -26,5 +26,4 @@ public class GameProgress implements Serializable {
                 '}';
     }
 
-
 }
