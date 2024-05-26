@@ -75,6 +75,7 @@ public class Main {
     //Read Fies (Deserialization)
 
     private static GameProgress openProgress(String pathGame) throws ClassNotFoundException {
+        //Task 1. Создание каталогов, фалов. Сохранение файлов.
         GameProgress gameProgress = null;
         try (FileInputStream fis = new FileInputStream(pathGame);
              ObjectInputStream ois = new ObjectInputStream(fis)) {
