@@ -1,3 +1,7 @@
+package code.company.netology;
+
+import code.company.netology.GameProgress;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;

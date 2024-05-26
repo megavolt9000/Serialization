@@ -8,7 +8,7 @@
 Установку программы необходимо производить из Java кода с использованием класса `File`. Процесс будет состоять из следующих этапов:
 1. В папке `Games` создайте несколько директорий: `src`, `res`, `savegames`, `temp`. 
 2. В каталоге `src` создайте две директории: `main`, `test`. 
-3. В подкаталоге `main` создайте два файла: `Main.java`, `Utils.java`. 
+3. В подкаталоге `main` создайте два файла: `code.company.netology.Main.java`, `Utils.java`. 
 4. В каталог `res` создайте три директории: `drawables`, `vectors`, `icons`.
 5. В директории `temp` создайте файл `temp.txt`.
 
@@ -27,9 +27,9 @@
 ## Описание
 В данной задаче Вы потренируетесь сериализовывать Java класс, используя интерфейс `Serializable`, записывать сериализованные файлы на жесткий диск, используя класс `FileOutputStream`, и упаковывать их в архив с помощью `ZipOutputStream`.
 
-Для дальнейшей работы потребуется создать класс `GameProgress`, хранящий информацию об игровом процессе. Предлагаем следующую реализацию:
+Для дальнейшей работы потребуется создать класс `code.company.netology.GameProgress`, хранящий информацию об игровом процессе. Предлагаем следующую реализацию:
 ```java
-public class GameProgress implements Serializable {
+public class code.company.netology.GameProgress implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int health;
@@ -37,7 +37,7 @@ public class GameProgress implements Serializable {
     private int lvl;
     private double distance;
 
-    public GameProgress(int health, int weapons, int lvl, double distance) {
+    public code.company.netology.GameProgress(int health, int weapons, int lvl, double distance) {
         this.health = health;
         this.weapons = weapons;
         this.lvl = lvl;
@@ -46,7 +46,7 @@ public class GameProgress implements Serializable {
 
     @Override
     public String toString() {
-        return "GameProgress{" +
+        return "code.company.netology.GameProgress{" +
                 "health=" + health +
                 ", weapons=" + weapons +
                 ", lvl=" + lvl +
@@ -57,15 +57,15 @@ public class GameProgress implements Serializable {
 ```
 
 Таким образом, для выполнения задания потребуется проделать следующие шаги:
-1. Создать три экземпляра класса `GameProgress`.
-2. Сохранить сериализованные объекты `GameProgress` в папку `savegames` из предыдущей задачи.
+1. Создать три экземпляра класса `code.company.netology.GameProgress`.
+2. Сохранить сериализованные объекты `code.company.netology.GameProgress` в папку `savegames` из предыдущей задачи.
 3. Созданные файлы сохранений из папки `savegames` запаковать в один архив `zip`.
 4. Удалить файлы сохранений, лежащие вне архива.
 
 ## Реализация
-Создайте три экземпляра класса `GameProgress`.
+Создайте три экземпляра класса `code.company.netology.GameProgress`.
 
-Реализуйте метод `saveGame()`, принимающий в качестве аргументов полный путь к файлу типа `String` (например, "/Users/admin/Games/GunRunner/savegames/save3.dat") и объект класса `GameProgress`. Для записи Вам потребуются такие классы как `FileOutputStream` и `ObjectOutputStream`. У последнего есть метод `writeObject()`, подходящий для записи сериализованного объекта . Во избежание утечек памяти, не забудьте либо использовать `try` с ресурсами, либо вручную закрыть файловые стримы (это касается всех случаев работы с файловыми потоками).
+Реализуйте метод `saveGame()`, принимающий в качестве аргументов полный путь к файлу типа `String` (например, "/Users/admin/Games/GunRunner/savegames/save3.dat") и объект класса `code.company.netology.GameProgress`. Для записи Вам потребуются такие классы как `FileOutputStream` и `ObjectOutputStream`. У последнего есть метод `writeObject()`, подходящий для записи сериализованного объекта . Во избежание утечек памяти, не забудьте либо использовать `try` с ресурсами, либо вручную закрыть файловые стримы (это касается всех случаев работы с файловыми потоками).
 
 Таким образом, вызов метода `saveGame()` должен приводить к созданию файлов сохранений в папке `savegames`.
 
@@ -86,6 +86,6 @@ public class GameProgress implements Serializable {
 ## Реализация
 Реализуйте метод `openZip()`, который принимал бы два аргумента: путь к файлу типа `String` (например, "/Users/admin/Games/GunRunner/savegames/zip.zip") и путь к папке, куда стоит разархивировать файлы типа `String` (например, "/Users/admin/Games/GunRunner/savegames"). Для распаковки Вам потребуются такие стримовые классы как `FileInputStream`, `ZipInputStream` и класс объекта архива `ZipEntry`. Считывание элементов аврхива производится с помощью метода `getNextEntry()` класса `ZipInputStream`, а узнать название объекта `ZipEntry` можно с помощью метода `getName()`. Запись в файл распакованных объектов можно произвести с помощью `FileOutputStream`.
 
-Далее реализуйте метод `openProgress()`, который бы в качестве аргумента принимал путь к файлу с сохраненной игрой типа `String` (например, "/Users/admin/Games/GunRunner/savegames/save2.dat") и возвращал объект типа `GameProgress`. В данном методе Вам потребуются классы `FileInputStream` и `ObjectInputStream`. С помощью метода класса `ObjectInputStream` `readObject()` можно десериализовать объект, а далее привести (скастить) его к `GameProgress`.
+Далее реализуйте метод `openProgress()`, который бы в качестве аргумента принимал путь к файлу с сохраненной игрой типа `String` (например, "/Users/admin/Games/GunRunner/savegames/save2.dat") и возвращал объект типа `code.company.netology.GameProgress`. В данном методе Вам потребуются классы `FileInputStream` и `ObjectInputStream`. С помощью метода класса `ObjectInputStream` `readObject()` можно десериализовать объект, а далее привести (скастить) его к `code.company.netology.GameProgress`.
 
-Так как в классе `GameProgress` метод `toString()` уже переопределен, поэтому достаточно вывести полученный объект в консоль.
+Так как в классе `code.company.netology.GameProgress` метод `toString()` уже переопределен, поэтому достаточно вывести полученный объект в консоль.

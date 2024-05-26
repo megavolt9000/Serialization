@@ -1,3 +1,5 @@
+package code.company.netology;
+
 import java.io.Serializable;
 
 public class GameProgress implements Serializable {
@@ -18,7 +20,7 @@ public class GameProgress implements Serializable {
 
     @Override
     public String toString() {
-        return "GameProgress{" +
+        return "code.company.netology.GameProgress{" +
                 "health=" + health +
                 ", weapons=" + weapons +
                 ", lvl=" + lvl +
