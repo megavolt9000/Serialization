@@ -1,23 +1,95 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+
 
 public class Main {
-    public static void main(String[] args) {
-        StringBuilder sb = new StringBuilder();
-        /*
-       ** создаем объект File в качестве каталога
-        File dir1 = new File("C:/JAVA//Projects//Serialization//Games");
-       ** создаем объект File для файла, находящегося в каталоге
-        File file1 = new File("C://SomeDir", "Hello.txt");
-       ** создаем объект File для файла, находящегося в каталоге dir1
-        File dir1=new File();
-        File file2 = new File("C://JAVA//Projects//Serialization//Games", "Hello2.txt");
-      */
+    // Saving Files
+    public static void saveGame(String path, GameProgress game) {
+        try (FileOutputStream fos = new FileOutputStream(path);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(game);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
+    // Packing  ZIP
+    private static void packingZip(String filePath, List<String> lpaths) {
+        try (ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(filePath))) {
+            int count = 1;
+            for (String path : lpaths) {
+                FileInputStream fis = new FileInputStream(path);
+                ZipEntry entry = new ZipEntry("savedGame" + count++ + ".dat");
+                zout.putNextEntry(entry);
+                byte[] buffer = new byte[fis.available()];
+                fis.read(buffer);
+                zout.write(buffer);
+                zout.closeEntry();
+                fis.close();
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    //Delete Files
+    private static void deleteFiles() {
+        File file = new File("C:/JAVA/Projects/Serialization/Games/savegames");
+        if (file.isDirectory()) {
+            for (File files : file.listFiles()) {
+                if (!files.getName().contains(".zip")) {
+                    files.delete();
+                }
+            }
+        }
+    }
+
+    // Unpacking ZIP
+    private static void unPackingZip(String filePath1, String filePath2) {
+
+        try (ZipInputStream zin = new ZipInputStream(new FileInputStream(filePath1))) {
+
+            ZipEntry entry;
+            String name;
+            while ((entry = zin.getNextEntry()) != null) {
+                name = entry.getName();
+              //  System.out.printf("file name:  %s \n", name);
+
+                FileOutputStream fout = new FileOutputStream(filePath2 + "\\" + name);
+                for (int c = zin.read(); c != -1; c = zin.read()) {
+                    fout.write(c);
+                }
+                fout.flush();
+                zin.closeEntry();
+                fout.close();
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    //Read Fies (Deserialization)
+
+    private static GameProgress openProgress(String pathGame) throws ClassNotFoundException {
+        GameProgress gameProgress = null;
+        try (FileInputStream fis = new FileInputStream(pathGame);
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            gameProgress = (GameProgress) ois.readObject();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        return gameProgress;
+    }
+
+
+    public static void main(String[] args) throws ClassNotFoundException {
+        StringBuilder sb = new StringBuilder();
 
         //Создание подкаталога SRC
-
         File dirSrc = new File("C:/JAVA/Projects/Serialization/Games/src");
 
         if (dirSrc.mkdir()) {
@@ -25,11 +97,9 @@ public class Main {
                     .append(dirSrc.getName() + " ")
                     .append("создана")
                     .append("\r\n");
-            System.out.println("Директория " + dirSrc.getName() + " создана");
         } else {
             sb.append("не удалось создать директорию " + dirSrc.getName())
-            .append("\r\n");
-            System.out.println("Не удалось создать директорию. " + dirSrc.getName());
+                    .append("\r\n");
         }
 
         //Создание подкаталога MAIN
@@ -41,13 +111,9 @@ public class Main {
                     .append(dirMain.getName() + " ")
                     .append("создана")
                     .append("\r\n");
-
-
-            System.out.println("Директория " + dirMain.getName() + " создана");
         } else {
             sb.append("не удалось создать директорию " + dirMain.getName())
                     .append("\r\n");
-            System.out.println("не удалось создать директорию " + dirMain.getName());
         }
         //Создание подкаталога TEST
 
@@ -58,13 +124,9 @@ public class Main {
                     .append(dirTest.getName() + " ")
                     .append("создана")
                     .append("\r\n");
-
-
-            System.out.println("Директория " + dirTest.getName() + " создана");
         } else {
             sb.append("не удалось создать директорию " + dirTest.getName())
                     .append("\r\n");
-            System.out.println("не удалось создать директорию " + dirTest.getName());
         }
         //Создание подкаталога RES
 
@@ -75,13 +137,9 @@ public class Main {
                     .append(dirRes.getName() + " ")
                     .append("создана")
                     .append("\r\n");
-
-
-            System.out.println("Директория " + dirRes.getName() + " создана");
         } else {
             sb.append("не удалось создать директорию " + dirRes.getName())
                     .append("\r\n");
-            System.out.println("не удалось создать директорию " + dirRes.getName());
         }
 
         //Создание подкаталогa RES/drawables
@@ -93,13 +151,8 @@ public class Main {
                     .append(dirDrawables.getName() + " ")
                     .append("создана")
                     .append("\r\n");
-
-
-            System.out.println("Директория " + dirDrawables.getName() + " создана");
-        } else {
             sb.append("не удалось создать директорию " + dirDrawables.getName())
                     .append("\r\n");
-            System.out.println("не удалось создать директорию " + dirDrawables.getName());
         }
 
         //Создание подкаталогa RES/vectors
@@ -111,13 +164,10 @@ public class Main {
                     .append(dirVectors.getName() + " ")
                     .append("создана")
                     .append("\r\n");
-
-
-            System.out.println("Директория " + dirVectors.getName() + " создана");
         } else {
             sb.append("не удалось создать директорию " + dirVectors.getName())
                     .append("\r\n");
-            System.out.println("не удалось создать директорию " + dirVectors.getName());
+            //  System.out.println("не удалось создать директорию " + dirVectors.getName());
         }
         //Создание подкаталогa RES/icons
 
@@ -128,13 +178,9 @@ public class Main {
                     .append(dirIcons.getName() + " ")
                     .append("создана")
                     .append("\r\n");
-
-
-            System.out.println("Директория " + dirIcons.getName() + " создана");
         } else {
             sb.append("не удалось создать директорию " + dirIcons.getName())
                     .append("\r\n");
-            System.out.println("не удалось создать директорию " + dirIcons.getName());
         }
 
         //Создание подкаталога SAVEGAMES
@@ -146,13 +192,9 @@ public class Main {
                     .append(dirSaveGames.getName() + " ")
                     .append("создана")
                     .append("\r\n");
-
-
-            System.out.println("Директория " + dirSaveGames.getName() + " создана");
         } else {
             sb.append("не удалось создать директорию " + dirSaveGames.getName())
                     .append("\r\n");
-            System.out.println("не удалось создать директорию " + dirSaveGames.getName());
         }
         //Создание подкаталога TEMP
 
@@ -163,25 +205,25 @@ public class Main {
                     .append(dirTemp.getName() + " ")
                     .append("создана")
                     .append("\r\n");
-
-
-            System.out.println("Директория " + dirTemp.getName() + " создана");
         } else {
             sb.append("не удалось создать директорию " + dirTemp.getName())
                     .append("\r\n");
-            System.out.println("не удалось создать директорию " + dirTemp.getName());
         }
 
         //Создание файла TEMP.txt
         File fileTemp = new File("C:/JAVA/Projects/Serialization/Games/temp", "temp.txt");
 
         try {
-            if (fileTemp.createNewFile())
+            if (fileTemp.createNewFile()) {
                 sb.append("Файл ")
                         .append(fileTemp.getName() + " ")
                         .append(" был создан")
                         .append("\r\n");
-            System.out.println("Файл " + fileTemp.getName() + " был создан");
+            } else {
+                sb.append("не удалось создать файл ")
+                        .append(fileTemp.getName())
+                        .append("\r\n");
+            }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
@@ -191,17 +233,20 @@ public class Main {
             System.out.println(e.getMessage());
         }
 
-
         //Создание файла MAIN.java
         File fileMain = new File("C:/JAVA/Projects/Serialization/Games/src/main", "Main.java");
 
         try {
-            if (fileMain.createNewFile())
+            if (fileMain.createNewFile()) {
                 sb.append("Файл ")
                         .append(fileMain.getName() + " ")
                         .append(" был создан")
                         .append("\r\n");
-            System.out.println("Файл " + fileMain.getName() + " был создан");
+            } else {
+                sb.append("не удалось создать файл ")
+                        .append(fileMain.getName())
+                        .append("\r\n");
+            }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
@@ -215,12 +260,16 @@ public class Main {
         File fileUtils = new File("C:/JAVA/Projects/Serialization/Games/src/main/", "Utils.java");
 
         try {
-            if (fileUtils.createNewFile())
+            if (fileUtils.createNewFile()) {
                 sb.append("Файл ")
                         .append(fileUtils.getName() + " ")
                         .append(" был создан")
                         .append("\r\n");
-            System.out.println("Файл " + fileUtils.getName() + " был создан");
+            } else {
+                sb.append("не удалось создать файл ")
+                        .append(fileUtils.getName())
+                        .append("\r\n");
+            }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
@@ -230,26 +279,24 @@ public class Main {
             System.out.println(e.getMessage());
         }
 
-//запись в файл temp.txt
 
-        if (fileTemp.canWrite()) {
-            System.out.println("Файл " + fileTemp.getName() + " записан");
-        }else {
-            System.out.println("Файл " + fileTemp.getName() + " не записан");
-        }
+        //Task 2.  Cохранение, удаление файлов и упаковка в ZIP
+        GameProgress game1 = new GameProgress(50, 20, 10, 45);
+        GameProgress game2 = new GameProgress(40, 30, 5, 100);
+        GameProgress game3 = new GameProgress(90, 5, 1, 150);
+        saveGame("C:/JAVA/Projects/Serialization/Games/savegames/game1.dat", game1);
+        saveGame("C:/JAVA/Projects/Serialization/Games/savegames/game2.dat", game2);
+        saveGame("C:/JAVA/Projects/Serialization/Games/savegames/game3.dat", game3);
+        List<String> paths = new ArrayList<>();
+        paths.add("C:/JAVA/Projects/Serialization/Games/savegames/game1.dat");
+        paths.add("C:/JAVA/Projects/Serialization/Games/savegames/game2.dat");
+        paths.add("C:/JAVA/Projects/Serialization/Games/savegames/game3.dat");
+        packingZip("C:/JAVA/Projects/Serialization/Games/savegames/save.zip", paths);
+        deleteFiles();
 
 
-        if (fileMain.canWrite()) {
-            System.out.println("Файл " + fileMain.getName() + " записан");
-        }else {
-            System.out.println("Файл " + fileMain.getName() + " не записан");
-        }
-
-
-        if (fileTemp.canWrite()) {
-            System.out.println("Файл " + fileUtils.getName() + " записан");
-        }else {
-            System.out.println("Файл " + fileUtils.getName() + " не записан");
-        }
+        //TASK 3. Распаковка ZIP, десериализация.
+        unPackingZip("C:/JAVA/Projects/Serialization/Games/savegames/save.zip", "C:/JAVA/Projects/Serialization/Games/savegames/");
+        System.out.println(openProgress("C:/JAVA/Projects/Serialization/Games/savegames/savedGame1.dat"));
     }
 }

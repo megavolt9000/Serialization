@@ -1,12 +1,12 @@
-import java.io.*;
+import java.io.Serializable;
 
 public class GameProgress implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private int health;
-    private int weapons;
-    private int lvl;
-    private double distance;
+    private final int health;
+    private final int weapons;
+    private final int lvl;
+    private final double distance;
 
     public GameProgress(int health, int weapons, int lvl, double distance) {
         this.health = health;
@@ -14,6 +14,7 @@ public class GameProgress implements Serializable {
         this.lvl = lvl;
         this.distance = distance;
     }
+
 
     @Override
     public String toString() {
@@ -24,4 +25,6 @@ public class GameProgress implements Serializable {
                 ", distance=" + distance +
                 '}';
     }
+
+
 }
