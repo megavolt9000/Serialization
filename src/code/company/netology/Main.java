@@ -102,9 +102,7 @@ public class Main {
             sb.append("Невозможно создать директорию " + dir.getName() + "\r\n");
             rezultString += sb.toString();
         }
-    }
-
-    ;
+    };
 
     //log for Files
     public static void createFile(String fileName) throws IOException {
