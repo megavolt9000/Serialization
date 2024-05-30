@@ -102,7 +102,7 @@ public class Main {
             sb.append("Невозможно создать директорию " + dir.getName() + "\r\n");
             rezultString += sb.toString();
         }
-    };
+    }
 
     //log for Files
     public static void createFile(String fileName) throws IOException {
@@ -170,8 +170,7 @@ public class Main {
         paths.add("C:/JAVA/Projects/Serialization/Games/savegames/game3.dat");
         packingZip("C:/JAVA/Projects/Serialization/Games/savegames/save.zip", paths);
         deleteFiles();
-
-
+        
         //TASK 3. Распаковка ZIP, десериализация.
         unPackingZip("C:/JAVA/Projects/Serialization/Games/savegames/save.zip", "C:/JAVA/Projects/Serialization/Games/savegames/");
         System.out.println(openProgress("C:/JAVA/Projects/Serialization/Games/savegames/savedGame1.dat"));
