@@ -1,9 +1,8 @@
 package code.company.netology;
 
-import code.company.netology.GameProgress;
-
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -61,7 +60,7 @@ public class Main {
             String name;
             while ((entry = zin.getNextEntry()) != null) {
                 name = entry.getName();
-              //  System.out.printf("file name:  %s \n", name);
+                //  System.out.printf("file name:  %s \n", name);
 
                 FileOutputStream fout = new FileOutputStream(filePath2 + "\\" + name);
                 for (int c = zin.read(); c != -1; c = zin.read()) {
@@ -90,9 +89,73 @@ public class Main {
         return gameProgress;
     }
 
-    public static void main(String[] args) throws ClassNotFoundException {
-        StringBuilder sb = new StringBuilder();
 
+
+
+    public static void main(String[] args) throws ClassNotFoundException {
+String nameDir =" ";
+StringBuilder sb = new StringBuilder();
+
+
+        List<File> dirList = Arrays.asList(
+
+                new File("C:/JAVA/Projects/Serialization/Games/src"),
+                new File("C:/JAVA/Projects/Serialization/Games/src/main"),
+                new File("C:/JAVA/Projects/Serialization/Games/src/test"),
+                new File("C:/JAVA/Projects/Serialization/Games/res"),
+                new File("C:/JAVA/Projects/Serialization/Games/res/drawables"),
+                new File("C:/JAVA/Projects/Serialization/Games/res/vectors"),
+                new File("C:/JAVA/Projects/Serialization/Games/res/icons"),
+                new File("C:/JAVA/Projects/Serialization/Games/savegames"),
+                new File("C:/JAVA/Projects/Serialization/Games/temp")
+        );
+
+        List<File> fileList = Arrays.asList(
+                new File("C://JAVA//Projects//Serialization//Games//temp//temp.txt"),
+                new File("C:/JAVA/Projects/Serialization/Games/src/main/Main.java"),
+                new File("C:/JAVA/Projects/Serialization/Games/src/main/Utils.java")
+        );
+
+        dirList.stream().forEach(dir -> {
+
+            if (dir.mkdir()) {
+                sb.append("Директория " + dir.getName() + " создана" + "\r\n");
+
+            } else {
+                sb.append("Директория " + dir.getName() + " уже существует" + "\r\n");
+            }
+        });
+        fileList.stream().forEach(file -> {
+            try {
+                if (file.createNewFile()) {
+                    sb.append("файл " + file.getName() + " создан \r\n");
+                } else {
+                    sb.append("Директория " + file.getName() + "уже существует" + "\r\n");
+                }
+            } catch (IOException e) {
+                sb.append(e.getMessage() + '\n');
+            }
+        });
+
+        try (FileWriter log = new FileWriter("C:/JAVA/Projects/Serialization/Games/temp/temp.txt", false)) {
+            log.write(sb.toString());
+            log.flush();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            sb.append((e.getMessage()) + '\n');
+        }
+        try (BufferedReader br = new BufferedReader(new FileReader("C:/JAVA/Projects/Serialization/Games/temp/temp.txt"))) {
+            String s;
+            while ((s = br.readLine()) != null)
+                System.out.println(s);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+
+        /*
+         */
+        /*
         //Создание подкаталога SRC
         File dirSrc = new File("C:/JAVA/Projects/Serialization/Games/src");
 
@@ -238,7 +301,7 @@ public class Main {
         }
 
         //Создание файла MAIN.java
-        File fileMain = new File("C:/JAVA/Projects/Serialization/Games/src/main", "Main.java");
+        File fileMain = new File("C:/JAVA/Projects/Serialization/Games/src/main", "code.company.netology.Main.java");
 
         try {
             if (fileMain.createNewFile()) {
@@ -283,6 +346,8 @@ public class Main {
             System.out.println(e.getMessage());
         }
 
+*/
+
 
         //Task 2.  Cохранение, удаление файлов и упаковка в ZIP
         GameProgress game1 = new GameProgress(50, 20, 10, 45);
@@ -291,7 +356,9 @@ public class Main {
         saveGame("C:/JAVA/Projects/Serialization/Games/savegames/game1.dat", game1);
         saveGame("C:/JAVA/Projects/Serialization/Games/savegames/game2.dat", game2);
         saveGame("C:/JAVA/Projects/Serialization/Games/savegames/game3.dat", game3);
+
         List<String> paths = new ArrayList<>();
+
         paths.add("C:/JAVA/Projects/Serialization/Games/savegames/game1.dat");
         paths.add("C:/JAVA/Projects/Serialization/Games/savegames/game2.dat");
         paths.add("C:/JAVA/Projects/Serialization/Games/savegames/game3.dat");
@@ -302,5 +369,7 @@ public class Main {
         //TASK 3. Распаковка ZIP, десериализация.
         unPackingZip("C:/JAVA/Projects/Serialization/Games/savegames/save.zip", "C:/JAVA/Projects/Serialization/Games/savegames/");
         System.out.println(openProgress("C:/JAVA/Projects/Serialization/Games/savegames/savedGame1.dat"));
+
+
     }
 }
